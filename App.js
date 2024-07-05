@@ -1,12 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, Button } from 'react-native';
 import { useState } from 'react';
+import SearchStudent from './buscarAlumno';
 
 
 export default function App() {
 
   const [alumnos, setAlumnos] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleDatabase, setModalVisibleDatabase] = useState(false);
+  const [modalVisibleAlumno, setModalVisibleAlumno] = useState(false);
+  const [modalVisibleCrear, setModalVisibleCrear] = useState(false);
+
+
 
   const fetchAll = async () => {
     try {
@@ -21,34 +26,42 @@ export default function App() {
     }
   };
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
+  const handleCloseModalDatabse = () => {
+    setModalVisibleDatabase(false);
+  };
+
+  const handleCloseModalAlumno = () => {
+    setModalVisibleAlumno(false);
   };
 
   const handleVer = () => {
     fetchAll()
-    // Lógica para ver registros
-    setModalVisible(true);
+    setModalVisibleDatabase(true);
+  };
+
+  const handleVerAlumno = () => {
+    setModalVisibleAlumno(true);
   };
 
   const handleCrear = () => {
-    // Lógica para crear registros
-    alert('Crear registro');
+    setModalVisibleCrear(true)
   };
 
-  const handleEditar = () => {
-    // Lógica para editar registros
-    alert('Editar registro');
-  };
+  // const handleEditar = () => {
+  //   // Lógica para editar registros
+  //   alert('Editar registro');
+  // };
 
-  const handleEliminar = () => {
-    // Lógica para eliminar registros
-    alert('Eliminar registro');
-  };
+  // const handleEliminar = () => {
+  //   // Lógica para eliminar registros
+  //   alert('Eliminar registro');
+  // };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Portal de alumnos</Text>
+
+      {/* PARA CONSULTA BASE DE DATOS */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleVer}>
           <Text style={styles.buttonText}>Ver alumnos</Text>
@@ -58,8 +71,8 @@ export default function App() {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalVisible}
-          onRequestClose={handleCloseModal}
+          visible={modalVisibleDatabase}
+          onRequestClose={handleCloseModalDatabse}
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -71,22 +84,45 @@ export default function App() {
               ))}
 
               {/* Botón para cerrar el modal */}
-              <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
+              <TouchableOpacity style={styles.closeButton} onPress={handleCloseModalDatabse}>
                 <Text style={styles.closeButtonText}>Cerrar</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
 
-        <TouchableOpacity style={styles.button} onPress={handleCrear}>
-          <Text style={styles.buttonText}>Crear</Text>
+
+        {/* PARA CONSULTA ALUMNO*/}
+        <TouchableOpacity style={styles.button} onPress={handleVerAlumno}>
+          <Text style={styles.buttonText}>Buscar alumno</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleEditar}>
-          <Text style={styles.buttonText}>Editar</Text>
+
+        <Modal
+          visible={modalVisibleAlumno}
+          animationType="slide"
+          onRequestClose={handleCloseModalAlumno}
+        >
+          <SearchStudent />
+          <View style={styles.modalContainer}>
+            {/* Botón para cerrar el modal */}
+            <TouchableOpacity style={styles.closeButton} onPress={handleCloseModalAlumno}>
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
+
+        <TouchableOpacity style={styles.button} onPress={handleCrear}>
+          <Text style={styles.buttonText}>Crear alumno</Text>
+        </TouchableOpacity>
+
+
+        {/* <TouchableOpacity style={styles.button} onPress={handleEditar}>
+          <Text style={styles.buttonText}>Editar alumno</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleEliminar}>
-          <Text style={styles.buttonText}>Eliminar</Text>
-        </TouchableOpacity>
+          <Text style={styles.buttonText}>Eliminar alumno</Text>
+        </TouchableOpacity> */} 
       </View>
     </View>
   );
@@ -104,7 +140,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#E6B9A6',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 5,
